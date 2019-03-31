@@ -1,0 +1,10 @@
+name: Wilderness
+main: muqsit\wilderness\Wilderness
+api: 3.0.0
+version: 0.0.1
+
+commands:
+  wilderness:
+    aliases: ["wild"]
+    default: op
+    permission: wilderness.command
