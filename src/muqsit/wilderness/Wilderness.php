@@ -14,6 +14,10 @@ use pocketmine\plugin\PluginBase;
 class Wilderness extends PluginBase{
 
 	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
+		if(!$sender instanceof Player){
+	        $sender->sendMessage("Please use this command in game.");
+	        return true;
+	    	}
 		$level = $sender->getLevel();
 		$x = mt_rand(-10000, 10000);
 		$z = mt_rand(-10000, 10000);
