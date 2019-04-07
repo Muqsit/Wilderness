@@ -1,0 +1,34 @@
+# Wilderness v0.0.1 configuration
+
+# Sets coordinate ranges /wild should be bounded to.
+# range = [min, max] (closed interval)
+coordinate-ranges:
+  minx: -10000
+  maxx: 10000
+  minz: -10000
+  maxz: 10000
+
+# Whether to temporarily lock players off of using the command
+# while a /wild request is pending.
+# When a player executes /wild, they are most likely going to request
+# the server to load (or even generate a whole new) chunk. While the
+# chunk is loading/generating, the /wild request would be pending.
+# It is RECOMMENDED you set this option to true to disallow players from
+# stacking up wilderness requests and flooding the server with chunk
+# load/generate requests.
+chunk-load-flood-protection: true
+
+# Whether to use pocketmine's Level::safeSpawn() algorithm while teleporting
+# players in the wilderness.
+# This prevents players from getting teleported to places where they would
+# instead have suffocated, such as a 1x1x1 gap.
+do-safe-spawn: true
+
+# Configure which levels /wilderness should or should not work in
+levels:
+  # The type of the list. Available types:
+  #   blacklist: All worlds listed in "list" are forbidden
+  #   whitelist: Only the worlds listed in "list" are permitted
+  type: blacklist
+  list:
+  - "nether" # highest block in the nether is always at y=128, so this plugin won't work properly in the nether

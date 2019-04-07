@@ -6,5 +6,11 @@ version: 0.0.1
 commands:
   wilderness:
     aliases: ["wild"]
-    default: op
     permission: wilderness.command
+
+permissions:
+  wilderness:
+    default: false
+    childrern:
+      wilderness.command:
+        default: op
