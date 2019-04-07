@@ -5,10 +5,10 @@ namespace muqsit\wilderness\math;
 
 class Random2DCoordinateGenerator{
 
-	/** @var int[] */
+	/** @var ClosedInterval */
 	private $x_interval;
 
-	/** @var int[] */
+	/** @var ClosedInterval */
 	private $y_interval;
 
 	public function __construct(int $minx, int $maxx, int $minz, int $maxz){
