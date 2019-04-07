@@ -18,7 +18,7 @@ coordinate-ranges:
 # load/generate requests.
 chunk-load-flood-protection: true
 
-# Whether to use pocketmine's Level::safeSpawn() algorithm while teleporting
+# Whether to use pocketmine's Level::getSafeSpawn() algorithm while teleporting
 # players in the wilderness.
 # This prevents players from getting teleported to places where they would
 # instead have suffocated, such as a 1x1x1 gap.
