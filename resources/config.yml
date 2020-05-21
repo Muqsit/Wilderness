@@ -2,11 +2,17 @@
 
 # Sets coordinate ranges /wild should be bounded to.
 # range = [min, max] (closed interval)
+# Use centerx, centerz and blockedradius to block players from /wilding
+# to a position in the predefined area. This can be useful for a warzone
+# where players are not meant to /wild into.
 coordinate-ranges:
   minx: -10000
   maxx: 10000
   minz: -10000
   maxz: 10000
+  centerx: 0
+  centerz: 0
+  blockedradius: 100
 
 # Whether to temporarily lock players off of using the command
 # while a /wild request is pending.

@@ -11,13 +11,21 @@ class ClosedInterval{
 	/** @var int */
 	private $max;
 
-	public function __construct(int $min, int $max){
+	/** @var int */
+	private $center;
+
+	/** @var int */
+	private $radius;
+
+	public function __construct(int $min, int $max, int $center, int $radius){
 		if($min > $max){
 			throw new \InvalidArgumentException("The minimum value of the interval (" . $min . ") is greater than the maximum value (" . $max . ")");
 		}
 
 		$this->min = $min;
 		$this->max = $max;
+		$this->center = $center;
+		$this->radius = $radius;
 	}
 
 	public function getMin() : int{
@@ -29,6 +37,9 @@ class ClosedInterval{
 	}
 
 	public function getRandom() : int{
-		return mt_rand($this->min, $this->max);
+		if(rand(0, 1) === 1){
+			return mt_rand($this->center + $this->radius, $this->max);
+		}
+		return mt_rand($this->min, $this->center - $this->radius);
 	}
 }

@@ -40,7 +40,9 @@ class Wilderness extends PluginBase{
 		$coordinate_range = $this->getConfig()->get("coordinate-ranges");
 		$this->coordinate_generator = new Random2DCoordinateGenerator(
 			$coordinate_range["minx"], $coordinate_range["maxx"],
-			$coordinate_range["minz"], $coordinate_range["maxz"]
+			$coordinate_range["minz"], $coordinate_range["maxz"],
+			$coordinate_range["centerx"], $coordinate_range["centerz"],
+			$coordinate_range["blockedradius"]
 		);
 
 		$this->chunk_load_flood_protection = (bool) $this->getConfig()->get("chunk-load-flood-protection");
