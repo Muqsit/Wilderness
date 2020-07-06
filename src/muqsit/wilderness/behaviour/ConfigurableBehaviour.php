@@ -25,6 +25,17 @@ abstract class ConfigurableBehaviour implements Behaviour{
 	}
 
 	final protected function getConfig() : Config{
-		return $this->config ?? $this->config = new Config($this->config_file_path, Config::YAML);
+		if($this->config === null){
+			if(!file_exists($this->config_file_path)){
+				file_put_contents($this->config_file_path, $this->createConfigContent());
+			}
+			$this->config = new Config($this->config_file_path, Config::YAML);
+		}
+
+		return $this->config;
+	}
+
+	protected function createConfigContent() : string{
+		return yaml_emit([]);
 	}
 }

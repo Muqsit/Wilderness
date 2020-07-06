@@ -71,4 +71,53 @@ class DefaultWildernessBehaviour extends ConfigurableBehaviour{
 			"{WORLD}" => $position->getLevelNonNull()->getFolderName()
 		]);
 	}
+
+	protected function createConfigContent() : string{
+		/** @syntax yaml */
+		return <<<'EOD'
+# Default behaviour file for Wilderness (wilderness:default)
+
+# Sets coordinate ranges /wild should be bounded to.
+# range = [min, max] (closed interval)
+coordinate-ranges:
+  minx: -10000
+  maxx: 10000
+  minz: -10000
+  maxz: 10000
+
+# Configure which worlds /wilderness should (or should not) work in
+worlds:
+  # The type of the list. Available types:
+  #   blacklist: All worlds listed in "list" are forbidden
+  #   whitelist: Only the worlds listed in "list" are permitted
+  type: blacklist
+  list:
+    - "nether" # highest block in the nether is always at y=128, so this plugin won't work properly in the nether
+
+language:
+  # You can use "&" to colour your messages.
+  # {PLAYER}: The name of the player the message is being sent to
+
+  # Message sent when player executes /wild
+  # {X}: The X coordinate the player is going to get teleported to
+  # {Z}: The Z coordinate the player is going to get teleported to
+  # {WORLD}: The world the player is going to get teleported to
+  on-command: "&eTeleporting..."
+
+  # Message sent when player tries to execute /wild while a /wild
+  # request is already pending.
+  on-command-failed-pending: "&cYou are executing /wild too quickly, try again in some time."
+
+  # Message sent when player executes /wild in a forbidden world
+  # {WORLD}: The world the player is in
+  on-command-failed-badworld: "&cYou cannot use /wild in {WORLD}!"
+
+  # Message sent when player teleports to a random spot using /wild
+  # {X}: The X coordinate the player is going to get teleported to
+  # {Y}: The Y coordinate the player is going to get teleported to
+  # {Z}: The Z coordinate the player is going to get teleported to
+  # {WORLD}: The world the player is going to get teleported to
+  on-teleport: ""
+EOD;
+	}
 }

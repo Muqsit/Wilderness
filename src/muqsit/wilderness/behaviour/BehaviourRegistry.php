@@ -62,7 +62,12 @@ final class BehaviourRegistry{
 	}
 
 	public static function onLoaderLoad(Loader $loader) : void{
-		$loader->saveResource("behaviours/wilderness-default.yml");
+		$directory = $loader->getDataFolder() . "behaviours";
+		if(!is_dir($directory)){
+			/** @noinspection MkdirRaceConditionInspection */
+			mkdir($directory);
+		}
+
 		$name = strtolower($loader->getName());
 		self::register("{$name}:default", new DefaultWildernessBehaviour());
 	}
