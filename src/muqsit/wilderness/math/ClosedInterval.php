@@ -1,7 +1,10 @@
 <?php
 
 declare(strict_types=1);
+
 namespace muqsit\wilderness\math;
+
+use http\Exception\InvalidArgumentException;
 
 class ClosedInterval{
 
@@ -13,7 +16,7 @@ class ClosedInterval{
 
 	public function __construct(int $min, int $max){
 		if($min > $max){
-			throw new \InvalidArgumentException("The minimum value of the interval (" . $min . ") is greater than the maximum value (" . $max . ")");
+			throw new InvalidArgumentException("The minimum value of the interval ({$min}) is greater than the maximum value ({$max})");
 		}
 
 		$this->min = $min;

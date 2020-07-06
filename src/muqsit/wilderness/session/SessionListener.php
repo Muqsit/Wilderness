@@ -1,22 +1,21 @@
 <?php
 
 declare(strict_types=1);
-namespace muqsit\wilderness;
 
-use muqsit\wilderness\utils\PlayerSession;
+namespace muqsit\wilderness\session;
 
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 
-class SessionHandler implements Listener{
+final class SessionListener implements Listener{
 
 	/**
 	 * @param PlayerJoinEvent $event
 	 * @priority MONITOR
 	 */
 	public function onPlayerJoin(PlayerJoinEvent $event) : void{
-		PlayerSession::create($event->getPlayer());
+		SessionManager::create($event->getPlayer());
 	}
 
 	/**
@@ -24,6 +23,6 @@ class SessionHandler implements Listener{
 	 * @priority MONITOR
 	 */
 	public function onPlayerQuit(PlayerQuitEvent $event) : void{
-		PlayerSession::destroy($event->getPlayer());
+		SessionManager::destroy($event->getPlayer());
 	}
 }

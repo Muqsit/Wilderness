@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace muqsit\wilderness\utils;
 
 use pocketmine\level\ChunkLoader;
@@ -21,13 +22,13 @@ class PopulatedChunkListener implements ChunkLoader{
 	private $z;
 
 	/** @var int */
-	private $loaderId = 0;
+	private $loaderId;
 
 	/** @var callable */
 	private $callback;
 
-	public function __construct(Level $level, int $chunkX, int $chunkZ, callable $callback){
-		$this->position = Position::fromObject(new Vector3($chunkX << 4, $chunkZ << 4), $level);
+	public function __construct(Level $world, int $chunkX, int $chunkZ, callable $callback){
+		$this->position = Position::fromObject(new Vector3($chunkX << 4, $chunkZ << 4), $world);
 		$this->x = $chunkX;
 		$this->z = $chunkZ;
 		$this->loaderId = Level::generateChunkLoaderId($this);
@@ -36,7 +37,7 @@ class PopulatedChunkListener implements ChunkLoader{
 
 	public function onChunkLoaded(Chunk $chunk) : void{
 		if(!$chunk->isPopulated()){
-			$this->getLevel()->populateChunk($this->getX(), $this->getZ());
+			$this->getLevel()->populateChunk($this->x, $this->z);
 			return;
 		}
 
@@ -48,7 +49,7 @@ class PopulatedChunkListener implements ChunkLoader{
 	}
 
 	private function onComplete() : void{
-		$this->getLevel()->unregisterChunkLoader($this, $this->getX(), $this->getZ());
+		$this->getLevel()->unregisterChunkLoader($this, $this->x, $this->z);
 		($this->callback)();
 	}
 
@@ -65,15 +66,15 @@ class PopulatedChunkListener implements ChunkLoader{
 	}
 
 	public function getLevel() : Level{
-		return $this->position->getLevel();
+		return $this->position->getLevelNonNull();
 	}
 
-	public function getX() : int{
-		return $this->x;
+	public function getX() : float{
+		return (float) $this->x;
 	}
 
-	public function getZ() : int{
-		return $this->z;
+	public function getZ() : float{
+		return (float) $this->z;
 	}
 
 	public function onChunkChanged(Chunk $chunk) : void{

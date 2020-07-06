@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace muqsit\wilderness\math;
 
 class Random2DCoordinateGenerator{
@@ -16,6 +17,9 @@ class Random2DCoordinateGenerator{
 		$this->y_interval = new ClosedInterval($minz, $maxz);
 	}
 
+	/**
+	 * @return int[]
+	 */
 	public function generate() : array{
 		return [
 			$this->x_interval->getRandom(),
