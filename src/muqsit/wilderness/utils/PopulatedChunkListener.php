@@ -22,7 +22,7 @@ class PopulatedChunkListener implements ChunkLoader{
 	private $z;
 
 	/** @var int */
-	private $loaderId;
+	private $loaderId = 0;
 
 	/** @var callable */
 	private $callback;

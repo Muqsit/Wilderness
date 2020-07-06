@@ -37,6 +37,15 @@ abstract class ListInstance{
 	}
 
 	/**
+	 * @return Set
+	 *
+	 * @phpstan-return Set<TType>
+	 */
+	public function getValues() : Set{
+		return $this->values;
+	}
+
+	/**
 	 * @param mixed $value
 	 * @return bool
 	 *

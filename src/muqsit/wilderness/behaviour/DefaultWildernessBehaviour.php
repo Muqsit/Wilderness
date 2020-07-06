@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace muqsit\wilderness\behaviour;
 
+use muqsit\wilderness\behaviour\defaults\WorldSelector;
+use muqsit\wilderness\behaviour\defaults\WorldSelectorRegistry;
 use muqsit\wilderness\Loader;
 use muqsit\wilderness\math\Random2DCoordinateGenerator;
 use muqsit\wilderness\utils\Language;
@@ -13,6 +15,9 @@ use pocketmine\level\Position;
 use pocketmine\Player;
 
 class DefaultWildernessBehaviour extends ConfigurableBehaviour{
+
+	/** @var WorldSelector */
+	private $world_selector;
 
 	/** @var Random2DCoordinateGenerator */
 	protected $coordinate_generator;
@@ -27,6 +32,8 @@ class DefaultWildernessBehaviour extends ConfigurableBehaviour{
 		parent::init($loader);
 		$config = $this->getConfig();
 
+		$selector_type = $config->getNested("world-selection.type");
+		$this->world_selector = WorldSelectorRegistry::get($selector_type, $config->getNested("world-selection.type-config.{$selector_type}"));
 		$coordinate_range = $config->get("coordinate-ranges");
 		$this->coordinate_generator = new Random2DCoordinateGenerator(
 			$coordinate_range["minx"], $coordinate_range["maxx"],
@@ -37,7 +44,8 @@ class DefaultWildernessBehaviour extends ConfigurableBehaviour{
 	}
 
 	public function generatePosition(Player $player) : ?Position2D{
-		$world = $player->getLevelNonNull();
+		$world = $this->world_selector->select($player);
+
 		if(!$this->worlds_list->contains($world->getFolderName())){
 			$this->language->translateAndSend($player, "on-command-failed-badworld", [
 				"{PLAYER}" => $player->getName(),
@@ -83,6 +91,28 @@ coordinate-ranges:
   maxx: 10000
   minz: -10000
   maxz: 10000
+
+# Specify which/how a world should be selected to teleport in
+world-selection:
+  # The selection type
+  # Available selection types:
+  #  self		- pick same world the player is in [default]
+  #  specific	- pick a specific world to teleport to
+  #  random		- pick a random world from a list of worlds
+  type: self
+  # Additional configuration required by the type above
+  type-config:
+    # No additional config needed for self
+    self: []
+    # Will always teleport player into this world
+    specific:
+      # The world to teleport in to
+      world: world
+    # Picks a random world from the list of worlds specified
+    random:
+      - world
+      - world2
+      - world3
 
 # Configure which worlds /wilderness should (or should not) work in
 worlds:

@@ -6,6 +6,7 @@ namespace muqsit\wilderness\behaviour;
 
 use InvalidArgumentException;
 use InvalidStateException;
+use muqsit\wilderness\behaviour\defaults\WorldSelectorRegistry;
 use muqsit\wilderness\Loader;
 use pocketmine\plugin\Plugin;
 
@@ -68,6 +69,7 @@ final class BehaviourRegistry{
 			mkdir($directory);
 		}
 
+		WorldSelectorRegistry::registerDefaults();
 		$name = strtolower($loader->getName());
 		self::register("{$name}:default", new DefaultWildernessBehaviour());
 	}
