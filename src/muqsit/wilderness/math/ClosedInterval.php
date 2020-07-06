@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\wilderness\math;
 
-use http\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 
 class ClosedInterval{
 

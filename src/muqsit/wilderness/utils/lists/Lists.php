@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\wilderness\utils\lists;
 
-use http\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 use InvalidStateException;
 use pocketmine\utils\Utils;
 

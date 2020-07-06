@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace muqsit\wilderness\utils\lists;
 
 use Ds\Set;
-use http\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 
 /**
  * @phpstan-template TType
