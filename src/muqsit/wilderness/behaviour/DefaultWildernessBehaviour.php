@@ -73,7 +73,6 @@ class DefaultWildernessBehaviour extends ConfigurableBehaviour{
 	}
 
 	protected function createConfigContent() : string{
-		/** @syntax yaml */
 		return <<<'EOD'
 # Default behaviour file for Wilderness (wilderness:default)
 
