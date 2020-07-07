@@ -81,6 +81,9 @@ final class Loader extends PluginBase{
 		$this->behaviour->generatePosition($sender, function(?Position2D $position) use($sender) : void{
 			if($sender->isOnline()){
 				if($position === null){
+					if($this->chunk_load_flood_protection){
+						SessionManager::get($sender)->setCommandLock(false);
+					}
 					$this->behaviour->onTeleportFailed($sender, BehaviourTeleportFailReason::CUSTOM);
 					return;
 				}
