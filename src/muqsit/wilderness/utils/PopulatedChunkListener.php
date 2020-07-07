@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace muqsit\wilderness\utils;
 
-use pocketmine\level\ChunkLoader;
-use pocketmine\level\format\Chunk;
-use pocketmine\level\Level;
-use pocketmine\level\Position;
 use pocketmine\math\Vector3;
+use pocketmine\world\ChunkListener;
+use pocketmine\world\ChunkLoader;
+use pocketmine\world\format\Chunk;
+use pocketmine\world\World;
 
-class PopulatedChunkListener implements ChunkLoader{
+class PopulatedChunkListener implements ChunkLoader, ChunkListener{
 
-	/** @var Position */
-	private $position;
+	/** @var World */
+	private $world;
 
 	/** @var int */
 	private $x;
@@ -21,52 +21,20 @@ class PopulatedChunkListener implements ChunkLoader{
 	/** @var int */
 	private $z;
 
-	/** @var int */
-	private $loaderId = 0;
-
 	/** @var callable */
 	private $callback;
 
-	public function __construct(Level $world, int $chunkX, int $chunkZ, callable $callback){
-		$this->position = Position::fromObject(new Vector3($chunkX << 4, 0.0, $chunkZ << 4), $world);
+	public function __construct(World $world, int $chunkX, int $chunkZ, callable $callback){
+		$this->world = $world;
 		$this->x = $chunkX;
 		$this->z = $chunkZ;
-		$this->loaderId = Level::generateChunkLoaderId($this);
 		$this->callback = $callback;
 	}
 
-	public function onChunkLoaded(Chunk $chunk) : void{
-		if(!$chunk->isPopulated()){
-			$this->getLevel()->populateChunk($this->x, $this->z);
-			return;
-		}
-
-		$this->onComplete();
-	}
-
-	public function onChunkPopulated(Chunk $chunk) : void{
-		$this->onComplete();
-	}
-
 	private function onComplete() : void{
-		$this->getLevel()->unregisterChunkLoader($this, $this->x, $this->z);
+		$this->world->unregisterChunkListener($this, $this->x, $this->z);
+		$this->world->unregisterChunkLoader($this, $this->x, $this->z);
 		($this->callback)();
-	}
-
-	public function getLoaderId() : int{
-		return $this->loaderId;
-	}
-
-	public function isLoaderActive() : bool{
-		return true;
-	}
-
-	public function getPosition() : Position{
-		return $this->position;
-	}
-
-	public function getLevel() : Level{
-		return $this->position->getLevelNonNull();
 	}
 
 	public function getX() : float{
@@ -77,12 +45,19 @@ class PopulatedChunkListener implements ChunkLoader{
 		return (float) $this->z;
 	}
 
-	public function onChunkChanged(Chunk $chunk) : void{
+	public function onChunkLoaded(Chunk $chunk) : void{
+		if(!$chunk->isPopulated()){
+			$this->world->populateChunk($this->x, $this->z);
+		}else{
+			$this->onComplete();
+		}
 	}
 
-	public function onChunkUnloaded(Chunk $chunk) : void{
+	public function onChunkPopulated(Chunk $chunk) : void{
+		$this->onComplete();
 	}
 
-	public function onBlockChanged(Vector3 $block) : void{
-	}
+	public function onChunkChanged(Chunk $chunk) : void{}
+	public function onChunkUnloaded(Chunk $chunk) : void{}
+	public function onBlockChanged(Vector3 $block) : void{}
 }

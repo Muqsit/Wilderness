@@ -6,8 +6,8 @@ namespace muqsit\wilderness\behaviour;
 
 use muqsit\wilderness\utils\Position2D;
 use muqsit\wilderness\Loader;
-use pocketmine\level\Position;
-use pocketmine\Player;
+use pocketmine\player\Player;
+use pocketmine\world\Position;
 
 interface Behaviour{
 

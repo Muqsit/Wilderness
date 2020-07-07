@@ -13,10 +13,10 @@ use muqsit\wilderness\utils\lists\Lists;
 use muqsit\wilderness\utils\RegionUtils;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\level\Position;
 use pocketmine\math\Vector3;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\world\Position;
 
 final class Loader extends PluginBase{
 
@@ -29,12 +29,12 @@ final class Loader extends PluginBase{
 	/** @var Behaviour */
 	private $behaviour;
 
-	public function onLoad() : void{
+	protected function onLoad() : void{
 		Lists::init();
 		BehaviourRegistry::onLoaderLoad($this);
 	}
 
-	public function onEnable() : void{
+	protected function onEnable() : void{
 		$this->saveDefaultConfig();
 
 		$this->chunk_load_flood_protection = (bool) $this->getConfig()->get("chunk-load-flood-protection");

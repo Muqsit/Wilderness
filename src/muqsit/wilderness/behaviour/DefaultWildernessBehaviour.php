@@ -11,8 +11,8 @@ use muqsit\wilderness\math\Random2DCoordinateGenerator;
 use muqsit\wilderness\utils\Language;
 use muqsit\wilderness\utils\lists\ListInstance;
 use muqsit\wilderness\utils\Position2D;
-use pocketmine\level\Position;
-use pocketmine\Player;
+use pocketmine\player\Player;
+use pocketmine\world\Position;
 
 class DefaultWildernessBehaviour extends ConfigurableBehaviour{
 
@@ -76,7 +76,7 @@ class DefaultWildernessBehaviour extends ConfigurableBehaviour{
 			"{X}" => (string) $position->getFloorX(),
 			"{Y}" => (string) $position->getFloorY(),
 			"{Z}" => (string) $position->getFloorZ(),
-			"{WORLD}" => $position->getLevelNonNull()->getFolderName()
+			"{WORLD}" => $position->getWorldNonNull()->getFolderName()
 		]);
 	}
 

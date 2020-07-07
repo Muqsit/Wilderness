@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace muqsit\wilderness\session;
 
 use muqsit\wilderness\Loader;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 final class SessionManager{
 

@@ -1,6 +1,6 @@
 name: Wilderness
 main: muqsit\wilderness\Loader
-api: 3.14.0
+api: 4.0.0
 version: 1.0.0
 
 commands:

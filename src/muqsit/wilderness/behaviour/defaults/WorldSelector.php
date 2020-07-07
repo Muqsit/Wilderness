@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace muqsit\wilderness\behaviour\defaults;
 
-use pocketmine\level\Level;
-use pocketmine\Player;
+use pocketmine\player\Player;
+use pocketmine\world\World;
 
 interface WorldSelector{
 
@@ -15,5 +15,5 @@ interface WorldSelector{
 	 */
 	public static function fromConfiguration(array $configuration);
 
-	public function select(Player $player) : Level;
+	public function select(Player $player) : World;
 }
