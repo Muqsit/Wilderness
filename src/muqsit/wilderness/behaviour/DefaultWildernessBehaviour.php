@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\wilderness\behaviour;
 
+use Closure;
 use muqsit\wilderness\behaviour\defaults\WorldSelector;
 use muqsit\wilderness\behaviour\defaults\WorldSelectorRegistry;
 use muqsit\wilderness\Loader;
@@ -43,7 +44,7 @@ class DefaultWildernessBehaviour extends ConfigurableBehaviour{
 		$this->language = BehaviourHelper::parseLanguage($config->get("language"));
 	}
 
-	public function generatePosition(Player $player) : ?Position2D{
+	public function generatePosition(Player $player, Closure $callback) : void{
 		$world = $this->world_selector->select($player);
 
 		if(!$this->worlds_list->contains($world->getFolderName())){
@@ -51,17 +52,17 @@ class DefaultWildernessBehaviour extends ConfigurableBehaviour{
 				"{PLAYER}" => $player->getName(),
 				"{WORLD}" => $world->getFolderName()
 			]);
-			return null;
+			$callback(null);
+		}else{
+			[$x, $z] = $this->coordinate_generator->generate();
+			$this->language->translateAndSend($player, "on-command", [
+				"{PLAYER}" => $player->getName(),
+				"{X}" => (string) $x,
+				"{Z}" => (string) $z,
+				"{WORLD}" => $world->getFolderName()
+			]);
+			$callback(new Position2D($x + 0.5, $z + 0.5, $world));
 		}
-
-		[$x, $z] = $this->coordinate_generator->generate();
-		$this->language->translateAndSend($player, "on-command", [
-			"{PLAYER}" => $player->getName(),
-			"{X}" => (string) $x,
-			"{Z}" => (string) $z,
-			"{WORLD}" => $world->getFolderName()
-		]);
-		return new Position2D($x + 0.5, $z + 0.5, $world);
 	}
 
 	public function onTeleportFailed(Player $player, int $reason) : void{
