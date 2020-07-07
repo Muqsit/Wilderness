@@ -28,7 +28,7 @@ class PopulatedChunkListener implements ChunkLoader{
 	private $callback;
 
 	public function __construct(Level $world, int $chunkX, int $chunkZ, callable $callback){
-		$this->position = Position::fromObject(new Vector3($chunkX << 4, $chunkZ << 4), $world);
+		$this->position = Position::fromObject(new Vector3($chunkX << 4, 0.0, $chunkZ << 4), $world);
 		$this->x = $chunkX;
 		$this->z = $chunkZ;
 		$this->loaderId = Level::generateChunkLoaderId($this);
