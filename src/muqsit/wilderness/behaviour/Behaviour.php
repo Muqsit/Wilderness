@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\wilderness\behaviour;
 
-use muqsit\wilderness\utils\Position2D;
+use Closure;
 use muqsit\wilderness\Loader;
 use pocketmine\level\Position;
 use pocketmine\Player;
@@ -23,12 +23,14 @@ interface Behaviour{
 	 * Generate a 2D position (horizontal axis) for a given Player
 	 * instance. RegionUtils will take care of the Y axis.
 	 *
-	 * Return null to not teleport the player.
+	 * Return null in closure to not teleport the player.
 	 *
 	 * @param Player $player
-	 * @return Position2D|null
+	 * @param Closure $callback
+	 *
+	 * @phpstan-param Closure(?\muqsit\wilderness\utils\Position2D) : void $callback
 	 */
-	public function generatePosition(Player $player) : ?Position2D;
+	public function generatePosition(Player $player, Closure $callback) : void;
 
 	/**
 	 * Called when teleportation fails.
