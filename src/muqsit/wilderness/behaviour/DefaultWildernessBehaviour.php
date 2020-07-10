@@ -77,7 +77,7 @@ class DefaultWildernessBehaviour extends ConfigurableBehaviour{
 			"{X}" => (string) $position->getFloorX(),
 			"{Y}" => (string) $position->getFloorY(),
 			"{Z}" => (string) $position->getFloorZ(),
-			"{WORLD}" => $position->getWorldNonNull()->getFolderName()
+			"{WORLD}" => $position->getWorld()->getFolderName()
 		]);
 	}
 
