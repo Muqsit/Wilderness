@@ -9,8 +9,5 @@ commands:
     permission: wilderness.command
 
 permissions:
-  wilderness:
-    default: false
-    childrern:
-      wilderness.command:
-        default: op
+  wilderness.command:
+    default: op
