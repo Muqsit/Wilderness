@@ -15,7 +15,7 @@ abstract class ConfigurableBehaviour implements Behaviour{
 	/** @var Config|null */
 	private $config;
 
-	public function init(Loader $loader) : void{
+	public function select(Loader $loader) : void{
 		$config_file_name = BehaviourRegistry::getIdentifier($this);
 		$colon_pos = strpos($config_file_name, ":");
 		if($colon_pos !== false){

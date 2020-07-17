@@ -12,12 +12,11 @@ use pocketmine\world\Position;
 interface Behaviour{
 
 	/**
-	 * Called after plugin gets enabled so behaviours can access
-	 * plugin logger, scheduler etc.
+	 * Called when this behaviour is selected.
 	 *
 	 * @param Loader $loader
 	 */
-	public function init(Loader $loader) : void;
+	public function select(Loader $loader) : void;
 
 	/**
 	 * Generate a 2D position (horizontal axis) for a given Player

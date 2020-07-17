@@ -29,8 +29,8 @@ class DefaultWildernessBehaviour extends ConfigurableBehaviour{
 	/** @var Language */
 	protected $language;
 
-	public function init(Loader $loader) : void{
-		parent::init($loader);
+	public function select(Loader $loader) : void{
+		parent::select($loader);
 		$config = $this->getConfig();
 
 		$selector_type = $config->getNested("world-selection.type");

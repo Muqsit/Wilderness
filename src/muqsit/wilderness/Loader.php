@@ -7,17 +7,12 @@ namespace muqsit\wilderness;
 use InvalidArgumentException;
 use muqsit\wilderness\behaviour\Behaviour;
 use muqsit\wilderness\behaviour\BehaviourRegistry;
-use muqsit\wilderness\behaviour\BehaviourTeleportFailReason;
+use muqsit\wilderness\command\BehaviourCommandExecutor;
+use muqsit\wilderness\command\NoBehaviourCommandExecutor;
 use muqsit\wilderness\session\SessionManager;
 use muqsit\wilderness\utils\lists\Lists;
-use muqsit\wilderness\utils\Position2D;
-use muqsit\wilderness\utils\RegionUtils;
-use pocketmine\command\Command;
-use pocketmine\command\CommandSender;
-use pocketmine\math\Vector3;
-use pocketmine\player\Player;
+use pocketmine\command\PluginCommand;
 use pocketmine\plugin\PluginBase;
-use pocketmine\world\Position;
 
 final class Loader extends PluginBase{
 
@@ -27,7 +22,10 @@ final class Loader extends PluginBase{
 	/** @var bool */
 	private $do_safe_spawn;
 
-	/** @var Behaviour */
+	/** @var PluginCommand */
+	private $command;
+
+	/** @var Behaviour|null */
 	private $behaviour;
 
 	protected function onLoad() : void{
@@ -38,6 +36,12 @@ final class Loader extends PluginBase{
 	protected function onEnable() : void{
 		$this->saveDefaultConfig();
 
+		$command = new PluginCommand("wilderness", $this, new NoBehaviourCommandExecutor());
+		$command->setAliases(["wild"]);
+		$command->setPermission("wilderness.command");
+		$this->getServer()->getCommandMap()->register($this->getName(), $command);
+		$this->command = $command;
+
 		$this->chunk_load_flood_protection = (bool) $this->getConfig()->get("chunk-load-flood-protection");
 		$this->do_safe_spawn = (bool) $this->getConfig()->get("do-safe-spawn");
 
@@ -45,74 +49,31 @@ final class Loader extends PluginBase{
 			SessionManager::init($this);
 		}
 
-		BehaviourRegistry::onLoaderEnable($this);
-		$behaviour = BehaviourRegistry::getNullable($this->getConfig()->get("behaviour"));
-		if($behaviour === null){
-			throw new InvalidArgumentException("Unregistered behaviour type: \"{$this->getConfig()->get("behaviour")}\"");
+		$behaviour_identifier = $this->getConfig()->get("behaviour");
+		if($behaviour_identifier !== false){
+			$behaviour = BehaviourRegistry::getNullable($this->getConfig()->get("behaviour"));
+			if($behaviour === null){
+				throw new InvalidArgumentException("Unregistered behaviour type: \"{$this->getConfig()->get("behaviour")}\"");
+			}
+			$this->setBehaviour($behaviour);
 		}
-		$this->behaviour = $behaviour;
 	}
 
-	public function getBehaviour() : Behaviour{
+	public function getBehaviour() : ?Behaviour{
 		return $this->behaviour;
 	}
 
-	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
-		if(!($sender instanceof Player)){
-			$sender->sendMessage("This command can only be executed as a player.");
-			return false;
+	public function setBehaviour(?Behaviour $behaviour) : bool{
+		if($this->behaviour !== $behaviour){
+			$this->behaviour = $behaviour;
+			if($this->behaviour !== null){
+				$this->behaviour->select($this);
+				$this->command->setExecutor(new BehaviourCommandExecutor($this->behaviour, $this->chunk_load_flood_protection, $this->do_safe_spawn));
+			}else{
+				$this->command->setExecutor(new NoBehaviourCommandExecutor());
+			}
+			return true;
 		}
-
-		if($this->chunk_load_flood_protection){
-			$session = SessionManager::getNullable($sender);
-			if($session === null){
-				$this->behaviour->onTeleportFailed($sender, BehaviourTeleportFailReason::AWAITING_LOGIN);
-				return false;
-			}
-
-			if($session->hasCommandLock()){
-				$this->behaviour->onTeleportFailed($sender, BehaviourTeleportFailReason::COMMAND_LOCK);
-				return false;
-			}
-
-			$session->setCommandLock(true);
-		}
-
-		$this->behaviour->generatePosition($sender, function(?Position2D $position) use($sender) : void{
-			if($sender->isOnline()){
-				if($position === null){
-					if($this->chunk_load_flood_protection){
-						SessionManager::get($sender)->setCommandLock(false);
-					}
-					$this->behaviour->onTeleportFailed($sender, BehaviourTeleportFailReason::CUSTOM);
-					return;
-				}
-
-				$x_f = (int) floor($position->x);
-				$z_f = (int) floor($position->z);
-				RegionUtils::onChunkGenerate(
-					$position->world, $x_f >> 4, $z_f >> 4,
-					function() use($sender, $position, $x_f, $z_f) : void{
-						if($sender->isOnline()){
-							if($this->chunk_load_flood_protection){
-								SessionManager::get($sender)->setCommandLock(false);
-							}
-
-							if($position->world->isClosed()){
-								$this->behaviour->onTeleportFailed($sender, BehaviourTeleportFailReason::WORLD_CLOSED);
-								return;
-							}
-
-							$pos = new Vector3($position->x, $position->world->getHighestBlockAt($x_f, $z_f) + 1.0, $position->z);
-							if($sender->teleport($position = $this->do_safe_spawn ? $position->world->getSafeSpawn($pos) : Position::fromObject($pos, $position->world))){
-								$this->behaviour->onTeleportSuccess($sender, $position);
-							}
-						}
-					}
-				);
-			}
-		});
-
-		return true;
+		return false;
 	}
 }
