@@ -4,16 +4,11 @@ declare(strict_types=1);
 
 namespace muqsit\wilderness\behaviour;
 
-use InvalidArgumentException;
 use InvalidStateException;
 use muqsit\wilderness\behaviour\defaults\WorldSelectorRegistry;
 use muqsit\wilderness\Loader;
-use pocketmine\plugin\Plugin;
 
 final class BehaviourRegistry{
-
-	/** @var bool */
-	private static $loader_enabled = false;
 
 	/**
 	 * @var Behaviour[]
@@ -38,10 +33,6 @@ final class BehaviourRegistry{
 	 * @param Behaviour $behaviour
 	 */
 	public static function register(string $identifier, Behaviour $behaviour) : void{
-		if(self::$loader_enabled){
-			throw new InvalidArgumentException("Behaviours must be registered during " . Plugin::class . "::onLoad()");
-		}
-
 		if(isset(self::$behaviours[$identifier])){
 			throw new InvalidStateException("Behaviour with the identifier \"{$identifier}\" already exists");
 		}
@@ -72,12 +63,5 @@ final class BehaviourRegistry{
 		WorldSelectorRegistry::registerDefaults();
 		$name = strtolower($loader->getName());
 		self::register("{$name}:default", new DefaultWildernessBehaviour());
-	}
-
-	public static function onLoaderEnable(Loader $loader) : void{
-		self::$loader_enabled = true;
-		foreach(self::$behaviours as $behaviour){
-			$behaviour->init($loader);
-		}
 	}
 }
