@@ -45,7 +45,7 @@ class PopulatedChunkListener implements ChunkLoader, ChunkListener{
 		return (float) $this->z;
 	}
 
-	public function onChunkLoaded(Chunk $chunk) : void{
+	public function onChunkLoaded(int $chunkX, int $chunkZ, Chunk $chunk) : void{
 		if(!$chunk->isPopulated()){
 			$this->world->populateChunk($this->x, $this->z);
 		}else{
@@ -53,11 +53,15 @@ class PopulatedChunkListener implements ChunkLoader, ChunkListener{
 		}
 	}
 
-	public function onChunkPopulated(Chunk $chunk) : void{
+	public function onChunkPopulated(int $chunkX, int $chunkZ, Chunk $chunk) : void{
 		$this->onComplete();
 	}
 
-	public function onChunkChanged(Chunk $chunk) : void{}
-	public function onChunkUnloaded(Chunk $chunk) : void{}
+	public function onChunkChanged(int $chunkX, int $chunkZ, Chunk $chunk) : void{
+	}
+
+	public function onChunkUnloaded(int $chunkX, int $chunkZ, Chunk $chunk) : void{
+	}
+
 	public function onBlockChanged(Vector3 $block) : void{}
 }
