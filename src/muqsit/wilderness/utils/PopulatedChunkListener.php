@@ -46,9 +46,7 @@ class PopulatedChunkListener implements ChunkLoader, ChunkListener{
 	}
 
 	public function onChunkLoaded(int $chunkX, int $chunkZ, Chunk $chunk) : void{
-		if(!$chunk->isPopulated()){
-			$this->world->populateChunk($this->x, $this->z);
-		}else{
+		if($chunk->isPopulated()){
 			$this->onComplete();
 		}
 	}
