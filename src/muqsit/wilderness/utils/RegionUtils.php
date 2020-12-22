@@ -17,6 +17,6 @@ final class RegionUtils{
 		$loader_listener = new PopulatedChunkListener($world, $chunkX, $chunkZ, $callback);
 		$world->registerChunkListener($loader_listener, $chunkX, $chunkZ);
 		$world->registerChunkLoader($loader_listener, $chunkX, $chunkZ, true);
-		$world->populateChunk($chunkX, $chunkZ);
+		$world->orderChunkPopulation($chunkX, $chunkZ);
 	}
 }
