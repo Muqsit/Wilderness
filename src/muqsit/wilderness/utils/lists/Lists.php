@@ -25,7 +25,7 @@ final class Lists{
 	 * @param string $type
 	 * @param string $list_class
 	 *
-	 * @phpstan-param class-string<ListInstance<mixed>> $list_class
+	 * @phpstan-param class-string<ListInstance> $list_class
 	 */
 	public static function register(string $type, string $list_class) : void{
 		if(isset(self::$types[$type = strtolower($type)])){
@@ -41,7 +41,7 @@ final class Lists{
 	 * @param mixed ...$args
 	 * @return ListInstance
 	 *
-	 * @phpstan-return ListInstance<mixed>
+	 * @phpstan-return ListInstance
 	 */
 	public static function create(string $type, ...$args) : ListInstance{
 		if(!isset(self::$types[$type = strtolower($type)])){

@@ -23,7 +23,7 @@ class DefaultWildernessBehaviour extends ConfigurableBehaviour{
 	/** @var Random2DCoordinateGenerator */
 	protected $coordinate_generator;
 
-	/** @var ListInstance<string> */
+	/** @var ListInstance */
 	protected $worlds_list;
 
 	/** @var Language */

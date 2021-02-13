@@ -21,7 +21,7 @@ final class BehaviourHelper{
 	 * $configuration = ["type" => $type, "list" => $list]
 	 *
 	 * @param array<string, mixed> $configuration
-	 * @return ListInstance<string>
+	 * @return ListInstance
 	 */
 	public static function parseGrayList(array $configuration) : ListInstance{
 		if(!isset($configuration["type"])){
