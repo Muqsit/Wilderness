@@ -8,7 +8,6 @@ use muqsit\wilderness\behaviour\Behaviour;
 use muqsit\wilderness\behaviour\BehaviourTeleportFailReason;
 use muqsit\wilderness\session\SessionManager;
 use muqsit\wilderness\utils\Position2D;
-use muqsit\wilderness\utils\RegionUtils;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
@@ -66,8 +65,7 @@ final class BehaviourCommandExecutor implements CommandExecutor{
 
 				$x_f = (int) floor($position->x);
 				$z_f = (int) floor($position->z);
-				RegionUtils::onChunkGenerate(
-					$position->world, $x_f >> 4, $z_f >> 4,
+				$position->world->orderChunkPopulation($x_f >> 4, $z_f >> 4, null)->onCompletion(
 					function() use($sender, $position, $x_f, $z_f) : void{
 						if($sender->isOnline()){
 							if($this->chunk_load_flood_protection){
@@ -84,7 +82,8 @@ final class BehaviourCommandExecutor implements CommandExecutor{
 								$this->behaviour->onTeleportSuccess($sender, $position);
 							}
 						}
-					}
+					},
+					static function() : void{ /* failure */ }
 				);
 			}
 		});
