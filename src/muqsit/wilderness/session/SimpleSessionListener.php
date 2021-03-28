@@ -8,14 +8,21 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 
-final class SessionListener implements Listener{
+final class SimpleSessionListener implements Listener{
+
+	/** @var SimpleSessionManager */
+	private $manager;
+
+	public function __construct(SimpleSessionManager $manager){
+		$this->manager = $manager;
+	}
 
 	/**
 	 * @param PlayerJoinEvent $event
 	 * @priority MONITOR
 	 */
 	public function onPlayerJoin(PlayerJoinEvent $event) : void{
-		SessionManager::create($event->getPlayer());
+		$this->manager->create($event->getPlayer());
 	}
 
 	/**
@@ -23,6 +30,6 @@ final class SessionListener implements Listener{
 	 * @priority MONITOR
 	 */
 	public function onPlayerQuit(PlayerQuitEvent $event) : void{
-		SessionManager::destroy($event->getPlayer());
+		$this->manager->destroy($event->getPlayer());
 	}
 }

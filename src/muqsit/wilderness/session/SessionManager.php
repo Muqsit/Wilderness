@@ -4,31 +4,18 @@ declare(strict_types=1);
 
 namespace muqsit\wilderness\session;
 
-use muqsit\wilderness\Loader;
 use pocketmine\player\Player;
 
-final class SessionManager{
+/**
+ * @internal
+ */
+interface SessionManager{
 
-	/** @var SessionInstance[] */
-	private static $sessions = [];
+	public function exists(Player $player) : bool;
 
-	public static function init(Loader $loader) : void{
-		$loader->getServer()->getPluginManager()->registerEvents(new SessionListener(), $loader);
-	}
+	public function hasCommandLock(Player $player) : bool;
 
-	public static function create(Player $player) : void{
-		self::$sessions[$player->getId()] = new SessionInstance();
-	}
+	public function setCommandLock(Player $player) : void;
 
-	public static function destroy(Player $player) : void{
-		unset(self::$sessions[$player->getId()]);
-	}
-
-	public static function get(Player $player) : SessionInstance{
-		return self::$sessions[$player->getId()];
-	}
-
-	public static function getNullable(Player $player) : ?SessionInstance{
-		return self::$sessions[$player->getId()] ?? null;
-	}
+	public function removeCommandLock(Player $player) : void;
 }
