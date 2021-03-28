@@ -72,18 +72,21 @@ final class BehaviourCommandExecutor implements CommandExecutor{
 								SessionManager::get($sender)->setCommandLock(false);
 							}
 
-							if($position->world->isClosed()){
-								$this->behaviour->onTeleportFailed($sender, BehaviourTeleportFailReason::WORLD_CLOSED);
-								return;
-							}
-
 							$pos = new Vector3($position->x, $position->world->getHighestBlockAt($x_f, $z_f) + 1.0, $position->z);
 							if($sender->teleport($position = $this->do_safe_spawn ? $position->world->getSafeSpawn($pos) : Position::fromObject($pos, $position->world))){
 								$this->behaviour->onTeleportSuccess($sender, $position);
 							}
 						}
 					},
-					static function() : void{ /* failure */ }
+					function() use($sender) : void{
+						if($sender->isOnline()){
+							if($this->chunk_load_flood_protection){
+								SessionManager::get($sender)->setCommandLock(false);
+							}
+
+							$this->behaviour->onTeleportFailed($sender, BehaviourTeleportFailReason::WORLD_CLOSED); // TODO: Figure out other possible causes of failed World::orderChunkPopulation
+						}
+					}
 				);
 			}
 		});
