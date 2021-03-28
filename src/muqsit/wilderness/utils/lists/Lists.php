@@ -4,17 +4,21 @@ declare(strict_types=1);
 
 namespace muqsit\wilderness\utils\lists;
 
+use Closure;
 use InvalidArgumentException;
 use InvalidStateException;
-use pocketmine\utils\Utils;
 
 final class Lists{
 
 	public const TYPE_BLACKLIST = "blacklist";
 	public const TYPE_WHITELIST = "whitelist";
 
-	/** @var string[] */
-	private static $types = [];
+	/**
+	 * @var string[]|ListInstance[]
+	 *
+	 * @phpstan-var array<string, class-string<ListInstance>>
+	 */
+	private static array $types = [];
 
 	public static function init() : void{
 		self::register(self::TYPE_BLACKLIST, Blacklist::class);
@@ -32,22 +36,22 @@ final class Lists{
 			throw new InvalidStateException("List of the type \"{$type}\" is already registered");
 		}
 
-		Utils::testValidInstance($list_class, ListInstance::class);
 		self::$types[$type] = $list_class;
 	}
 
 	/**
 	 * @param string $type
-	 * @param mixed ...$args
+	 * @param string[] $values
+	 * @param Closure|null $validator
 	 * @return ListInstance
 	 *
-	 * @phpstan-return ListInstance
+	 * @phpstan-param Closure(string) : bool $validator
 	 */
-	public static function create(string $type, ...$args) : ListInstance{
+	public static function create(string $type, array $values, ?Closure $validator = null) : ListInstance{
 		if(!isset(self::$types[$type = strtolower($type)])){
 			throw new InvalidArgumentException("Invalid list type \"{$type}\" given. Available list types: " . implode(", ", array_keys(self::$types)));
 		}
 
-		return new self::$types[$type](...$args);
+		return self::$types[$type]::create($values, $validator);
 	}
 }

@@ -12,7 +12,7 @@ final class WorldSelectorRegistry{
 	 * @var string[]|WorldSelector[]
 	 * @phpstan-var array<string, class-string<WorldSelector>>
 	 */
-	private static $selectors = [];
+	private static array $selectors = [];
 
 	public static function registerDefaults() : void{
 		self::register("self", SelfWorldSelector::class);

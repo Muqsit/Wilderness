@@ -18,17 +18,10 @@ use pocketmine\plugin\PluginBase;
 
 final class Loader extends PluginBase{
 
-	/** @var bool */
-	private $do_safe_spawn;
-
-	/** @var PluginCommand */
-	private $command;
-
-	/** @var Behaviour|null */
-	private $behaviour;
-
-	/** @var SessionManager */
-	private $session_manager;
+	private bool $do_safe_spawn;
+	private PluginCommand $command;
+	private ?Behaviour $behaviour = null;
+	private SessionManager $session_manager;
 
 	protected function onLoad() : void{
 		Lists::init();

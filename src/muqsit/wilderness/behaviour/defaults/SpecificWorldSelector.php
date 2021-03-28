@@ -16,11 +16,8 @@ final class SpecificWorldSelector implements WorldSelector{
 		return new self($configuration["world"]);
 	}
 
-	/** @var string */
-	private $world;
-
-	/** @var WorldManager */
-	private $world_manager;
+	private string $world;
+	private WorldManager $world_manager;
 
 	public function __construct(string $world){
 		$this->world = $world;

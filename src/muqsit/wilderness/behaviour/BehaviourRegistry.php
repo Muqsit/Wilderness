@@ -12,12 +12,17 @@ final class BehaviourRegistry{
 
 	/**
 	 * @var Behaviour[]
+	 *
 	 * @phpstan-var array<string, Behaviour>
 	 */
-	private static $behaviours = [];
+	private static array $behaviours = [];
 
-	/** @var string[] */
-	private static $identifiers = [];
+	/**
+	 * @var string[]
+	 *
+	 * @phpstan-var array<int, string>
+	 */
+	private static array $identifiers = [];
 
 	/**
 	 * Registers a new wilderness behaviour.

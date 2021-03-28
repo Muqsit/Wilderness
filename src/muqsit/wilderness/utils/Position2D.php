@@ -8,14 +8,9 @@ use pocketmine\world\World;
 
 final class Position2D{
 
-	/** @var float */
-	public $x;
-
-	/** @var float */
-	public $z;
-
-	/** @var World */
-	public $world;
+	public float $x;
+	public float $z;
+	public World $world;
 
 	public function __construct(float $x, float $z, World $world){
 		$this->x = $x;

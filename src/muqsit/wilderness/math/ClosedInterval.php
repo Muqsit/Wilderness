@@ -6,19 +6,20 @@ namespace muqsit\wilderness\math;
 
 use InvalidArgumentException;
 
-class ClosedInterval{
+final class ClosedInterval{
 
-	/** @var int */
-	private $min;
-
-	/** @var int */
-	private $max;
-
-	public function __construct(int $min, int $max){
+	public static function create(int $min, int $max) : self{
 		if($min > $max){
 			throw new InvalidArgumentException("The minimum value of the interval ({$min}) is greater than the maximum value ({$max})");
 		}
 
+		return new self($min, $max);
+	}
+
+	private int $min;
+	private int $max;
+
+	private function __construct(int $min, int $max){
 		$this->min = $min;
 		$this->max = $max;
 	}

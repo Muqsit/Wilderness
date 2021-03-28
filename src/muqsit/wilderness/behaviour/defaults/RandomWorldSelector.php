@@ -17,10 +17,9 @@ final class RandomWorldSelector implements WorldSelector{
 	}
 
 	/** @var string[] */
-	private $worlds;
+	private array $worlds;
 
-	/** @var WorldManager */
-	private $world_manager;
+	private WorldManager $world_manager;
 
 	public function __construct(string ...$worlds){
 		$this->worlds = $worlds;

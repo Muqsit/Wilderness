@@ -6,6 +6,7 @@ namespace muqsit\wilderness\behaviour;
 
 use Closure;
 use muqsit\wilderness\Loader;
+use muqsit\wilderness\utils\Position2D;
 use pocketmine\player\Player;
 use pocketmine\world\Position;
 
@@ -27,7 +28,7 @@ interface Behaviour{
 	 * @param Player $player
 	 * @param Closure $callback
 	 *
-	 * @phpstan-param Closure(?\muqsit\wilderness\utils\Position2D) : void $callback
+	 * @phpstan-param Closure(?Position2D) : void $callback
 	 */
 	public function generatePosition(Player $player, Closure $callback) : void;
 
@@ -37,6 +38,8 @@ interface Behaviour{
 	 *
 	 * @param Player $player
 	 * @param int $reason
+	 *
+	 * @phpstan-param BehaviourTeleportFailReason::* $reason
 	 */
 	public function onTeleportFailed(Player $player, int $reason) : void;
 

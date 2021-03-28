@@ -10,7 +10,7 @@ use pocketmine\player\Player;
 final class SimpleSessionManager implements SessionManager{
 
 	/** @var SessionInstance[] */
-	private $sessions = [];
+	private array $sessions = [];
 
 	public function __construct(Loader $loader){
 		$loader->getServer()->getPluginManager()->registerEvents(new SimpleSessionListener($this), $loader);

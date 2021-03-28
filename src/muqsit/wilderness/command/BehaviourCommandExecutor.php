@@ -17,14 +17,9 @@ use pocketmine\world\Position;
 
 final class BehaviourCommandExecutor implements CommandExecutor{
 
-	/** @var SessionManager */
-	private $session_manager;
-
-	/** @var Behaviour */
-	private $behaviour;
-
-	/** @var bool */
-	private $do_safe_spawn;
+	private SessionManager $session_manager;
+	private Behaviour $behaviour;
+	private bool $do_safe_spawn;
 
 	public function __construct(SessionManager $session_manager, Behaviour $behaviour, bool $do_safe_spawn){
 		$this->session_manager = $session_manager;

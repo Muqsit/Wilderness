@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace muqsit\wilderness\math;
 
-class Random2DCoordinateGenerator{
+final class Random2DCoordinateGenerator{
 
-	/** @var ClosedInterval */
-	private $x_interval;
-
-	/** @var ClosedInterval */
-	private $y_interval;
+	private ClosedInterval $x_interval;
+	private ClosedInterval $y_interval;
 
 	public function __construct(int $minx, int $maxx, int $minz, int $maxz){
-		$this->x_interval = new ClosedInterval($minx, $maxx);
-		$this->y_interval = new ClosedInterval($minz, $maxz);
+		$this->x_interval = ClosedInterval::create($minx, $maxx);
+		$this->y_interval = ClosedInterval::create($minz, $maxz);
 	}
 
 	/**
 	 * @return int[]
+	 *
+	 * @phpstan-return array{0: int, 1: int}
 	 */
 	public function generate() : array{
 		return [

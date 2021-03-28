@@ -13,7 +13,7 @@ interface WorldSelector{
 	 * @param mixed[] $configuration
 	 * @return static
 	 */
-	public static function fromConfiguration(array $configuration);
+	public static function fromConfiguration(array $configuration) : self;
 
 	public function select(Player $player) : World;
 }

@@ -6,6 +6,5 @@ namespace muqsit\wilderness\session;
 
 final class SessionInstance{
 
-	/** @var bool */
-	public $command_lock = false;
+	public bool $command_lock = false;
 }

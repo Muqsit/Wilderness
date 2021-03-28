@@ -17,17 +17,10 @@ use pocketmine\world\Position;
 
 class DefaultWildernessBehaviour extends ConfigurableBehaviour{
 
-	/** @var WorldSelector */
-	private $world_selector;
-
-	/** @var Random2DCoordinateGenerator */
-	protected $coordinate_generator;
-
-	/** @var ListInstance */
-	protected $worlds_list;
-
-	/** @var Language */
-	protected $language;
+	private WorldSelector $world_selector;
+	protected Random2DCoordinateGenerator $coordinate_generator;
+	protected ListInstance $worlds_list;
+	protected Language $language;
 
 	public function select(Loader $loader) : void{
 		parent::select($loader);

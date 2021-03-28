@@ -9,11 +9,8 @@ use pocketmine\utils\Config;
 
 abstract class ConfigurableBehaviour implements Behaviour{
 
-	/** @var string */
-	private $config_file_path;
-
-	/** @var Config|null */
-	private $config;
+	private string $config_file_path;
+	private ?Config $config = null;
 
 	public function select(Loader $loader) : void{
 		$config_file_name = BehaviourRegistry::getIdentifier($this);
