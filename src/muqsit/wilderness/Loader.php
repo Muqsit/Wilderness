@@ -57,9 +57,9 @@ final class Loader extends PluginBase{
 	public function setBehaviour(?Behaviour $behaviour) : bool{
 		if($this->behaviour !== $behaviour){
 			$this->behaviour = $behaviour;
-			if($this->behaviour !== null){
-				$this->behaviour->select($this);
-				$this->command->setExecutor(new BehaviourCommandExecutor($this->session_manager, $this->behaviour, $this->do_safe_spawn));
+			if($behaviour !== null){
+				$behaviour->select($this);
+				$this->command->setExecutor(new BehaviourCommandExecutor($this->session_manager, $behaviour, $this->do_safe_spawn));
 			}else{
 				$this->command->setExecutor(new NoBehaviourCommandExecutor());
 			}
