@@ -22,3 +22,11 @@ chunk-load-flood-protection: true
 # This prevents players from getting teleported to places where they would
 # instead have suffocated, such as a 1x1x1 gap.
 do-safe-spawn: true
+
+# Permission defaults for the "wilderness.command" permission
+# This permission allows players to execute the /wild command.
+# Valid values:
+#   op: all server operators (ops) are assigned this permission by default
+#   all: everyone is assigned this permission by default
+#   none: no one is assigned this permission by default
+permission-defaults: op
