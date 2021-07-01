@@ -12,6 +12,8 @@ use muqsit\wilderness\command\NoBehaviourCommandExecutor;
 use muqsit\wilderness\session\SessionManager;
 use muqsit\wilderness\utils\lists\Lists;
 use pocketmine\command\PluginCommand;
+use pocketmine\permission\Permission;
+use pocketmine\permission\PermissionManager;
 use pocketmine\plugin\PluginBase;
 
 final class Loader extends PluginBase{
@@ -36,9 +38,25 @@ final class Loader extends PluginBase{
 	public function onEnable() : void{
 		$this->saveDefaultConfig();
 
+		$permission_default_register = [
+			"op" => Permission::DEFAULT_OP,
+			"all" => Permission::DEFAULT_TRUE,
+			"none" => Permission::DEFAULT_FALSE
+		];
+
+		if(isset($permission_default_register[$permission_defaults = $this->getConfig()->get("permission-defaults", "op")])){
+			$permission_default_value = $permission_default_register[$permission_defaults];
+		}else{
+			throw new InvalidArgumentException("Invalid permission-defaults value configured: \"{$permission_defaults}\" (expected one of: " . implode(", ", array_keys($permission_default_register)) . ")");
+		}
+
+		$permission = new Permission("wilderness.command", "Allow access to /wild command", $permission_default_value);
+		$permission_manager = PermissionManager::getInstance();
+		$permission_manager->addPermission($permission);
+
 		$command = new PluginCommand("wilderness", $this);
 		$command->setAliases(["wild"]);
-		$command->setPermission("wilderness.command");
+		$command->setPermission($permission->getName());
 		$command->setExecutor(new NoBehaviourCommandExecutor());
 		$this->getServer()->getCommandMap()->register($this->getName(), $command);
 		$this->command = $command;

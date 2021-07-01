@@ -1,8 +1,4 @@
 name: Wilderness
 main: muqsit\wilderness\Loader
 api: 3.14.0
-version: 2.0.0
-
-permissions:
-  wilderness.command:
-    default: op
+version: 2.1.0
