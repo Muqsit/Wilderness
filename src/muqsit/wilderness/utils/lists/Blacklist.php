@@ -11,6 +11,6 @@ namespace muqsit\wilderness\utils\lists;
 class Blacklist extends ListInstance{
 
 	public function contains($value) : bool{
-		return !$this->values->contains($value);
+		return !isset($this->values[$value]);
 	}
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace muqsit\wilderness\utils\lists;
 
-use Ds\Set;
 use InvalidArgumentException;
 
 /**
@@ -13,10 +12,10 @@ use InvalidArgumentException;
 abstract class ListInstance{
 
 	/**
-	 * @var Set
-	 * @phpstan-var Set<TType>
+	 * @var array<mixed, mixed>
+	 * @phpstan-var array<TType, TType>
 	 */
-	protected $values;
+	protected $values = [];
 
 	/**
 	 * @param mixed[] $values
@@ -33,15 +32,17 @@ abstract class ListInstance{
 			}
 		}
 
-		$this->values = new Set($values);
+		foreach($values as $value){
+			$this->values[$value] = $value;
+		}
 	}
 
 	/**
-	 * @return Set
+	 * @return array<mixed, mixed>
 	 *
-	 * @phpstan-return Set<TType>
+	 * @phpstan-return array<TType, TType>
 	 */
-	public function getValues() : Set{
+	public function getValues() : array{
 		return $this->values;
 	}
 
