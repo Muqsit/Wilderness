@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace muqsit\wilderness\behaviour\defaults;
 
-use pocketmine\utils\Utils;
-
 final class WorldSelectorRegistry{
 
 	/**
@@ -27,7 +25,6 @@ final class WorldSelectorRegistry{
 	 * @phpstan-param class-string<WorldSelector> $class
 	 */
 	public static function register(string $type, string $class) : void{
-		Utils::testValidInstance($class, WorldSelector::class);
 		self::$selectors[$type] = $class;
 	}
 
