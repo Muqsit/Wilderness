@@ -6,7 +6,6 @@ namespace muqsit\wilderness\utils\lists;
 
 use Closure;
 use InvalidArgumentException;
-use InvalidStateException;
 
 final class Lists{
 
@@ -33,7 +32,7 @@ final class Lists{
 	 */
 	public static function register(string $type, string $list_class) : void{
 		if(isset(self::$types[$type = strtolower($type)])){
-			throw new InvalidStateException("List of the type \"{$type}\" is already registered");
+			throw new InvalidArgumentException("List of the type \"{$type}\" is already registered");
 		}
 
 		self::$types[$type] = $list_class;

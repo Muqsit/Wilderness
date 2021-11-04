@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace muqsit\wilderness\behaviour;
 
-use InvalidStateException;
+use InvalidArgumentException;
 use muqsit\wilderness\behaviour\defaults\WorldSelectorRegistry;
 use muqsit\wilderness\Loader;
 
@@ -28,7 +28,7 @@ final class BehaviourRegistry{
 	 * Registers a new wilderness behaviour.
 	 *
 	 * WARNING: Attempting to register a behaviour on post plugin enable will
-	 * throw an InvalidStateException. Register your custom wilderness
+	 * throw an InvalidArgumentException. Register your custom wilderness
 	 * behaviours in your Plugin::onLoad().
 	 *
 	 * Recommended format for $identifier: lowercase(plugin_name:name)
@@ -39,7 +39,7 @@ final class BehaviourRegistry{
 	 */
 	public static function register(string $identifier, Behaviour $behaviour) : void{
 		if(isset(self::$behaviours[$identifier])){
-			throw new InvalidStateException("Behaviour with the identifier \"{$identifier}\" already exists");
+			throw new InvalidArgumentException("Behaviour with the identifier \"{$identifier}\" already exists");
 		}
 
 		self::$behaviours[$identifier] = $behaviour;
