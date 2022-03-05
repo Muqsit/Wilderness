@@ -8,6 +8,7 @@ use muqsit\wilderness\behaviour\Behaviour;
 use muqsit\wilderness\behaviour\BehaviourTeleportFailReason;
 use muqsit\wilderness\session\SessionManager;
 use muqsit\wilderness\utils\Position2D;
+use muqsit\wilderness\utils\WeakPlayer;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
@@ -40,34 +41,37 @@ final class BehaviourCommandExecutor implements CommandExecutor{
 		}
 
 		$this->session_manager->setCommandLock($sender);
-		$this->behaviour->generatePosition($sender, function(?Position2D $position) use($sender) : void{
-			if($sender->isOnline()){
-				if($position === null){
-					$this->session_manager->removeCommandLock($sender);
-					$this->behaviour->onTeleportFailed($sender, BehaviourTeleportFailReason::CUSTOM);
-					return;
-				}
-
-				$x_f = (int) floor($position->x);
-				$z_f = (int) floor($position->z);
-				$position->world->orderChunkPopulation($x_f >> 4, $z_f >> 4, null)->onCompletion(
-					function() use($sender, $position, $x_f, $z_f) : void{
-						if($sender->isOnline()){
-							$this->session_manager->removeCommandLock($sender);
-							$pos = new Vector3($position->x, $position->world->getHighestBlockAt($x_f, $z_f) + 1.0, $position->z);
-							if($sender->teleport($position = $this->do_safe_spawn ? $position->world->getSafeSpawn($pos) : Position::fromObject($pos, $position->world))){
-								$this->behaviour->onTeleportSuccess($sender, $position);
-							}
-						}
-					},
-					function() use($sender) : void{
-						if($sender->isOnline()){
-							$this->session_manager->removeCommandLock($sender);
-							$this->behaviour->onTeleportFailed($sender, BehaviourTeleportFailReason::WORLD_CLOSED); // TODO: Figure out other possible causes of failed World::orderChunkPopulation
-						}
-					}
-				);
+		$weak_sender = WeakPlayer::from($sender);
+		$this->behaviour->generatePosition($sender, function(?Position2D $position) use($weak_sender) : void{
+			$sender = $weak_sender->get();
+			if($sender === null){
+				return;
 			}
+
+			if($position === null){
+				$this->session_manager->removeCommandLock($sender);
+				$this->behaviour->onTeleportFailed($sender, BehaviourTeleportFailReason::CUSTOM);
+				return;
+			}
+
+			$x_f = (int) floor($position->x);
+			$z_f = (int) floor($position->z);
+			$position->world->orderChunkPopulation($x_f >> 4, $z_f >> 4, null)->onCompletion(function() use($weak_sender, $position, $x_f, $z_f) : void{
+				$sender = $weak_sender->get();
+				if($sender !== null){
+					$this->session_manager->removeCommandLock($sender);
+					$pos = new Vector3($position->x, $position->world->getHighestBlockAt($x_f, $z_f) + 1.0, $position->z);
+					if($sender->teleport($position = $this->do_safe_spawn ? $position->world->getSafeSpawn($pos) : Position::fromObject($pos, $position->world))){
+						$this->behaviour->onTeleportSuccess($sender, $position);
+					}
+				}
+			}, function() use($weak_sender) : void{
+				$sender = $weak_sender->get();
+				if($sender !== null){
+					$this->session_manager->removeCommandLock($sender);
+					$this->behaviour->onTeleportFailed($sender, BehaviourTeleportFailReason::WORLD_CLOSED); // TODO: Figure out other possible causes of failed World::orderChunkPopulation
+				}
+			});
 		});
 
 		return true;
