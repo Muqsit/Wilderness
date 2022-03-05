@@ -18,6 +18,7 @@ use pocketmine\permission\DefaultPermissions;
 use pocketmine\permission\Permission;
 use pocketmine\permission\PermissionManager;
 use pocketmine\plugin\PluginBase;
+use RuntimeException;
 
 final class Loader extends PluginBase{
 
@@ -39,10 +40,12 @@ final class Loader extends PluginBase{
 		$permission_manager->addPermission($permission);
 		$permission_default_register = [
 			"op" => static function() use($permission_manager, $permission) : void{
-				$permission_manager->getPermission(DefaultPermissions::ROOT_OPERATOR)->addChild($permission->getName(), true);
+				$into_permission = $permission_manager->getPermission(DefaultPermissions::ROOT_OPERATOR) ?? throw new RuntimeException("Could not obtain permission: " . DefaultPermissions::ROOT_OPERATOR);
+				$into_permission->addChild($permission->getName(), true);
 			},
 			"all" => static function() use($permission_manager, $permission) : void{
-				$permission_manager->getPermission(DefaultPermissions::ROOT_USER)->addChild($permission->getName(), true);
+				$into_permission = $permission_manager->getPermission(DefaultPermissions::ROOT_USER) ?? throw new RuntimeException("Could not obtain permission: " . DefaultPermissions::ROOT_USER);
+				$into_permission->addChild($permission->getName(), true);
 			},
 			"none" => static function() : void{}
 		];

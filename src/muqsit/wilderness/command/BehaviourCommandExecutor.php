@@ -17,15 +17,11 @@ use pocketmine\world\Position;
 
 final class BehaviourCommandExecutor implements CommandExecutor{
 
-	private SessionManager $session_manager;
-	private Behaviour $behaviour;
-	private bool $do_safe_spawn;
-
-	public function __construct(SessionManager $session_manager, Behaviour $behaviour, bool $do_safe_spawn){
-		$this->session_manager = $session_manager;
-		$this->behaviour = $behaviour;
-		$this->do_safe_spawn = $do_safe_spawn;
-	}
+	public function __construct(
+		private SessionManager $session_manager,
+		private Behaviour $behaviour,
+		private bool $do_safe_spawn
+	){}
 
 	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
 		if(!($sender instanceof Player)){

@@ -16,13 +16,10 @@ final class ClosedInterval{
 		return new self($min, $max);
 	}
 
-	private int $min;
-	private int $max;
-
-	private function __construct(int $min, int $max){
-		$this->min = $min;
-		$this->max = $max;
-	}
+	private function __construct(
+		private int $min,
+		private int $max
+	){}
 
 	public function getMin() : int{
 		return $this->min;

@@ -10,11 +10,9 @@ use pocketmine\event\player\PlayerQuitEvent;
 
 final class SimpleSessionListener implements Listener{
 
-	private SimpleSessionManager $manager;
-
-	public function __construct(SimpleSessionManager $manager){
-		$this->manager = $manager;
-	}
+	public function __construct(
+		private SimpleSessionManager $manager
+	){}
 
 	/**
 	 * @param PlayerJoinEvent $event

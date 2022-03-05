@@ -10,13 +10,6 @@ use InvalidArgumentException;
 abstract class ListInstance{
 
 	/**
-	 * @var string[]
-	 *
-	 * @phpstan-var array<string, string>
-	 */
-	protected array $values = [];
-
-	/**
 	 * @param string[] $values
 	 * @param Closure|null $validator
 	 * @return ListInstance
@@ -40,9 +33,9 @@ abstract class ListInstance{
 	 *
 	 * @phpstan-param array<string, string> $values
 	 */
-	final private function __construct(array $values){
-		$this->values = $values;
-	}
+	final private function __construct(
+		protected array $values
+	){}
 
 	/**
 	 * @return string[]
