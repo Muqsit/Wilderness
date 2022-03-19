@@ -10,13 +10,6 @@ use pocketmine\command\CommandSender;
 final class Language{
 
 	/**
-	 * @var string[]
-	 *
-	 * @phpstan-var array<string, string>
-	 */
-	private array $entries;
-
-	/**
 	 * @param mixed[] $entries
 	 * @return Language
 	 *
@@ -37,9 +30,9 @@ final class Language{
 	 *
 	 * @phpstan-param array<string, string> $entries
 	 */
-	private function __construct(array $entries){
-		$this->entries = $entries;
-	}
+	private function __construct(
+		private array $entries
+	){}
 
 	/**
 	 * @param string $key

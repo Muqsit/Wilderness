@@ -27,10 +27,7 @@ final class RandomWorldSelector implements WorldSelector{
 	}
 
 	public function select(Player $player) : World{
-		$world = $this->world_manager->getWorldByName($world_name = $this->worlds[array_rand($this->worlds)]);
-		if($world === null){
-			throw new InvalidArgumentException("Cannot teleport player to unloaded world {$world_name}");
-		}
-		return $world;
+		$world_name = $this->worlds[array_rand($this->worlds)];
+		return $this->world_manager->getWorldByName($world_name) ?? throw new InvalidArgumentException("Cannot teleport player to unloaded world {$world_name}");
 	}
 }

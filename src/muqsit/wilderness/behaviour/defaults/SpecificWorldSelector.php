@@ -25,10 +25,6 @@ final class SpecificWorldSelector implements WorldSelector{
 	}
 
 	public function select(Player $player) : World{
-		$world = $this->world_manager->getWorldByName($this->world);
-		if($world === null){
-			throw new InvalidArgumentException("Cannot teleport player to unloaded world {$this->world}");
-		}
-		return $world;
+		return $this->world_manager->getWorldByName($this->world) ?? throw new InvalidArgumentException("Cannot teleport player to unloaded world {$this->world}");
 	}
 }

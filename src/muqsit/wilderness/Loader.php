@@ -67,10 +67,7 @@ final class Loader extends PluginBase{
 
 		$behaviour_identifier = $this->getConfig()->get("behaviour");
 		if($behaviour_identifier !== false){
-			$behaviour = BehaviourRegistry::getNullable($this->getConfig()->get("behaviour"));
-			if($behaviour === null){
-				throw new InvalidArgumentException("Unregistered behaviour type: \"{$this->getConfig()->get("behaviour")}\"");
-			}
+			$behaviour = BehaviourRegistry::getNullable($this->getConfig()->get("behaviour")) ?? throw new InvalidArgumentException("Unregistered behaviour type: \"{$this->getConfig()->get("behaviour")}\"");
 			$this->setBehaviour($behaviour);
 		}
 	}
