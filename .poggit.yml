@@ -2,6 +2,7 @@
 branches:
 - master
 - api4
+- pm5
 projects:
   Wilderness:
     path: ""
