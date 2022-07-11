@@ -14,6 +14,7 @@ use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
+use pocketmine\world\format\Chunk;
 use pocketmine\world\Position;
 
 final class BehaviourCommandExecutor implements CommandExecutor{
@@ -56,7 +57,7 @@ final class BehaviourCommandExecutor implements CommandExecutor{
 
 			$x_f = (int) floor($position->x);
 			$z_f = (int) floor($position->z);
-			$position->world->orderChunkPopulation($x_f >> 4, $z_f >> 4, null)->onCompletion(function() use($weak_sender, $position, $x_f, $z_f) : void{
+			$position->world->orderChunkPopulation($x_f >> Chunk::COORD_BIT_SIZE, $z_f >> Chunk::COORD_BIT_SIZE, null)->onCompletion(function() use($weak_sender, $position, $x_f, $z_f) : void{
 				$sender = $weak_sender->get();
 				if($sender !== null){
 					$this->session_manager->removeCommandLock($sender);
