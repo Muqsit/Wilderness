@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace muqsit\wilderness\command;
 
+use Closure;
+use Generator;
 use muqsit\wilderness\behaviour\Behaviour;
 use muqsit\wilderness\behaviour\BehaviourTeleportFailReason;
 use muqsit\wilderness\session\SessionManager;
@@ -16,6 +18,9 @@ use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\Position;
+use RuntimeException;
+use SOFe\AwaitGenerator\Await;
+use function floor;
 
 final class BehaviourCommandExecutor implements CommandExecutor{
 
@@ -43,38 +48,52 @@ final class BehaviourCommandExecutor implements CommandExecutor{
 
 		$this->session_manager->setCommandLock($sender);
 		$weak_sender = WeakPlayer::from($sender);
-		$this->behaviour->generatePosition($sender, function(?Position2D $position) use($weak_sender) : void{
-			$sender = $weak_sender->get();
-			if($sender === null){
+		Await::f2c(function() use($weak_sender) : Generator{
+			try{
+				$position = yield from Await::promise(function(Closure $resolve, Closure $reject) use($weak_sender) : void{
+					$sender = $weak_sender->get();
+					$sender !== null ? $this->behaviour->generatePosition($sender, $resolve) : $reject(new RuntimeException("Player is offline"));
+				});
+			}catch(RuntimeException){
 				return;
 			}
 
 			if($position === null){
-				$this->session_manager->removeCommandLock($sender);
-				$this->behaviour->onTeleportFailed($sender, BehaviourTeleportFailReason::CUSTOM);
-				return;
-			}
-
-			$x_f = (int) floor($position->x);
-			$z_f = (int) floor($position->z);
-			$position->world->orderChunkPopulation($x_f >> Chunk::COORD_BIT_SIZE, $z_f >> Chunk::COORD_BIT_SIZE, null)->onCompletion(function() use($weak_sender, $position, $x_f, $z_f) : void{
 				$sender = $weak_sender->get();
 				if($sender !== null){
 					$this->session_manager->removeCommandLock($sender);
-					$pos = new Vector3($position->x, $position->world->getHighestBlockAt($x_f, $z_f) + 1.0, $position->z);
-					if($sender->teleport($position = $this->do_safe_spawn ? $position->world->getSafeSpawn($pos) : Position::fromObject($pos, $position->world))){
-						$this->behaviour->onTeleportSuccess($sender, $position);
-					}
+					$this->behaviour->onTeleportFailed($sender, BehaviourTeleportFailReason::CUSTOM);
 				}
-			}, function() use($weak_sender) : void{
+				return;
+			}
+
+			$x = (int) floor($position->x);
+			$z = (int) floor($position->z);
+			$world = $position->world;
+			try{
+				yield from Await::promise(static function(Closure $resolve, Closure $reject) use($x, $z, $world) : void{
+					$world->isLoaded() ?
+						$world->orderChunkPopulation($x >> Chunk::COORD_BIT_SIZE, $z >> Chunk::COORD_BIT_SIZE, null)->onCompletion($resolve, static function() use($reject) : void{ $reject(new RuntimeException("Failed to load chunk")); }) :
+						$reject(new RuntimeException("World is closed"));
+				});
+			}catch(RuntimeException){
 				$sender = $weak_sender->get();
 				if($sender !== null){
 					$this->session_manager->removeCommandLock($sender);
 					$this->behaviour->onTeleportFailed($sender, BehaviourTeleportFailReason::WORLD_CLOSED); // TODO: Figure out other possible causes of failed World::orderChunkPopulation
 				}
-			});
-		});
+				return;
+			}
 
+			$sender = $weak_sender->get();
+			if($sender !== null){
+				$this->session_manager->removeCommandLock($sender);
+				$pos = new Vector3($position->x, $world->getHighestBlockAt($x, $z) + 1.0, $position->z);
+				if($sender->teleport($position = $this->do_safe_spawn ? $world->getSafeSpawn($pos) : Position::fromObject($pos, $world))){
+					$this->behaviour->onTeleportSuccess($sender, $position);
+				}
+			}
+		});
 		return true;
 	}
 }
