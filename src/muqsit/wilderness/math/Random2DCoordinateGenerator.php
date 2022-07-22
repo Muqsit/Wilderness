@@ -15,9 +15,7 @@ final class Random2DCoordinateGenerator{
 	}
 
 	/**
-	 * @return int[]
-	 *
-	 * @phpstan-return array{0: int, 1: int}
+	 * @return array{0: int, 1: int}
 	 */
 	public function generate() : array{
 		return [

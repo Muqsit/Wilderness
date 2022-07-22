@@ -12,11 +12,7 @@ final class Lists{
 	public const TYPE_BLACKLIST = "blacklist";
 	public const TYPE_WHITELIST = "whitelist";
 
-	/**
-	 * @var string[]|ListInstance[]
-	 *
-	 * @phpstan-var array<string, class-string<ListInstance>>
-	 */
+	/** @var array<string, class-string<ListInstance>> */
 	private static array $types = [];
 
 	public static function init() : void{
@@ -26,9 +22,7 @@ final class Lists{
 
 	/**
 	 * @param string $type
-	 * @param string $list_class
-	 *
-	 * @phpstan-param class-string<ListInstance> $list_class
+	 * @param class-string<ListInstance> $list_class
 	 */
 	public static function register(string $type, string $list_class) : void{
 		if(isset(self::$types[$type = strtolower($type)])){
@@ -41,10 +35,8 @@ final class Lists{
 	/**
 	 * @param string $type
 	 * @param string[] $values
-	 * @param Closure|null $validator
+	 * @param (Closure(string) : bool)|null $validator
 	 * @return ListInstance
-	 *
-	 * @phpstan-param Closure(string) : bool $validator
 	 */
 	public static function create(string $type, array $values, ?Closure $validator = null) : ListInstance{
 		if(!isset(self::$types[$type = strtolower($type)])){

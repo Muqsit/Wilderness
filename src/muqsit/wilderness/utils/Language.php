@@ -10,10 +10,8 @@ use pocketmine\command\CommandSender;
 final class Language{
 
 	/**
-	 * @param mixed[] $entries
+	 * @param array<string, string> $entries
 	 * @return Language
-	 *
-	 * @phpstan-param array<string, string> $entries
 	 */
 	public static function create(array $entries) : self{
 		foreach($entries as $key => $entry){
@@ -26,9 +24,7 @@ final class Language{
 	}
 
 	/**
-	 * @param string[] $entries
-	 *
-	 * @phpstan-param array<string, string> $entries
+	 * @param array<string, string> $entries
 	 */
 	private function __construct(
 		private array $entries
@@ -36,10 +32,8 @@ final class Language{
 
 	/**
 	 * @param string $key
-	 * @param string[] $replace_pairs
+	 * @param array<string, string> $replace_pairs
 	 * @return string|null
-	 *
-	 * @phpstan-param array<string, string> $replace_pairs
 	 */
 	public function translate(string $key, array $replace_pairs = []) : ?string{
 		$result = isset($this->entries[$key]) ? strtr($this->entries[$key], $replace_pairs) : "";
@@ -49,10 +43,8 @@ final class Language{
 	/**
 	 * @param CommandSender $messagable
 	 * @param string $key
-	 * @param string[] $replace_pairs
+	 * @param array<string, string> $replace_pairs
 	 * @return bool
-	 *
-	 * @phpstan-param array<string, string> $replace_pairs
 	 */
 	public function translateAndSend(CommandSender $messagable, string $key, array $replace_pairs = []) : bool{
 		$translated = $this->translate($key, $replace_pairs);

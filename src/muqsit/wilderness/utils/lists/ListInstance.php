@@ -11,10 +11,8 @@ abstract class ListInstance{
 
 	/**
 	 * @param string[] $values
-	 * @param Closure|null $validator
+	 * @param (Closure(string) : bool)|null $validator
 	 * @return ListInstance
-	 *
-	 * @phpstan-param Closure(string) : bool $validator
 	 */
 	final public static function create(array $values, ?Closure $validator = null) : self{
 		$valid_values = [];
@@ -29,9 +27,7 @@ abstract class ListInstance{
 	}
 
 	/**
-	 * @param string[] $values
-	 *
-	 * @phpstan-param array<string, string> $values
+	 * @param array<string, string> $values
 	 */
 	final private function __construct(
 		protected array $values

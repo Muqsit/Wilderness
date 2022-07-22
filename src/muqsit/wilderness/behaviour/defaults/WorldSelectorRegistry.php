@@ -6,10 +6,7 @@ namespace muqsit\wilderness\behaviour\defaults;
 
 final class WorldSelectorRegistry{
 
-	/**
-	 * @var string[]|WorldSelector[]
-	 * @phpstan-var array<string, class-string<WorldSelector>>
-	 */
+	/** @var array<string, class-string<WorldSelector>> */
 	private static array $selectors = [];
 
 	public static function registerDefaults() : void{
@@ -20,9 +17,7 @@ final class WorldSelectorRegistry{
 
 	/**
 	 * @param string $type
-	 * @param string $class
-	 *
-	 * @phpstan-param class-string<WorldSelector> $class
+	 * @param class-string<WorldSelector> $class
 	 */
 	public static function register(string $type, string $class) : void{
 		self::$selectors[$type] = $class;

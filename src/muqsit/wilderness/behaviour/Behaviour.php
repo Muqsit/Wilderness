@@ -26,9 +26,7 @@ interface Behaviour{
 	 * Return null in closure to not teleport the player.
 	 *
 	 * @param Player $player
-	 * @param Closure $callback
-	 *
-	 * @phpstan-param Closure(?Position2D) : void $callback
+	 * @param Closure(?Position2D) : void $callback
 	 */
 	public function generatePosition(Player $player, Closure $callback) : void;
 
@@ -37,9 +35,7 @@ interface Behaviour{
 	 * @see BehaviourTeleportFailReason
 	 *
 	 * @param Player $player
-	 * @param int $reason
-	 *
-	 * @phpstan-param BehaviourTeleportFailReason::* $reason
+	 * @param BehaviourTeleportFailReason::* $reason
 	 */
 	public function onTeleportFailed(Player $player, int $reason) : void;
 

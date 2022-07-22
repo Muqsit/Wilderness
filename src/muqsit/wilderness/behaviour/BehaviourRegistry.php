@@ -10,18 +10,10 @@ use muqsit\wilderness\Loader;
 
 final class BehaviourRegistry{
 
-	/**
-	 * @var Behaviour[]
-	 *
-	 * @phpstan-var array<string, Behaviour>
-	 */
+	/** @var array<string, Behaviour> */
 	private static array $behaviours = [];
 
-	/**
-	 * @var string[]
-	 *
-	 * @phpstan-var array<int, string>
-	 */
+	/** @var array<int, string> */
 	private static array $identifiers = [];
 
 	/**

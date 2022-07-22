@@ -20,10 +20,8 @@ final class BehaviourHelper{
 	 * $list = string[]
 	 * $configuration = ["type" => $type, "list" => $list]
 	 *
-	 * @param mixed[] $configuration
+	 * @param array<string, mixed> $configuration
 	 * @return ListInstance
-	 *
-	 * @phpstan-param array<string, mixed> $configuration
 	 */
 	public static function parseGrayList(array $configuration) : ListInstance{
 		if(!isset($configuration["type"])){
@@ -49,10 +47,8 @@ final class BehaviourHelper{
 	 * If value is a string[], all entries in the array will be
 	 * joined using TextFormat::EOL.
 	 *
-	 * @param string[]|string[][] $configuration
+	 * @param array<string, string|array<string>> $configuration
 	 * @return Language
-	 *
-	 * @phpstan-param array<string, string|array<string>> $configuration
 	 */
 	public static function parseLanguage(array $configuration) : Language{
 		$entries = [];
